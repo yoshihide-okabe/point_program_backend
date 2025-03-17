@@ -17,12 +17,20 @@ MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 MYSQL_HOST = os.getenv("MYSQL_HOST")
 MYSQL_PORT = os.getenv("MYSQL_PORT")
 MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
+MYSQL_SSL_CA = os.getenv("MYSQL_SSL_CA")
+
+# 環境変数の読み込み状況（デバッグ用）
+print("✅ 環境変数の確認:")
+print(f"MYSQL_USER: {MYSQL_USER}")
+print(f"MYSQL_HOST: {MYSQL_HOST}")
+print(f"MYSQL_DATABASE: {MYSQL_DATABASE}")
+print(f"MYSQL_SSL_CA: {MYSQL_SSL_CA}")
 
 # ==============================
 # 🎯 MySQL の接続設定
 # ==============================
-DATABASE_URL = f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}"
-
+#DATABASE_URL = f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}"
+DATABASE_URL = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?ssl_ca={MYSQL_SSL_CA}"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
