@@ -46,7 +46,6 @@ class User(Base):
     name = Column(String(255), nullable=False)
     company_name = Column(String(255), nullable=False)
 
-#
 class UserBalance(Base):
     """ ユーザーのポイント残高を管理するテーブル """
     __tablename__ = "user_balance"
@@ -112,6 +111,22 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# ==============================
+# 🎯 API: ユーザー認証
+# ==============================
+@app.get("/auth/user/{user_id}")
+def authenticate_user(user_id: int, db: Session = Depends(get_db)):
+    """ ユーザーIDからユーザー情報を取得する """
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="ユーザーが見つかりません")
+    
+    return {
+        "user_id": user.id,
+        "name": user.name,
+        "company_name": user.company_name
+    }
 
 # ==============================
 # 🎯 API: ユーザー情報取得
